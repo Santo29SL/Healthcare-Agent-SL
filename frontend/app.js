@@ -204,6 +204,22 @@ function toggleAuth(mode) {
     const isLogin = mode === 'login';
     document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
     document.getElementById('signupForm').classList.toggle('hidden', isLogin);
+    
+    const tabLogin = document.getElementById('tabLogin');
+    const tabSignup = document.getElementById('tabSignup');
+    if (tabLogin && tabSignup) {
+        if (isLogin) {
+            tabLogin.classList.add('bg-white', 'shadow-sm');
+            tabLogin.classList.remove('text-[#444746]');
+            tabSignup.classList.remove('bg-white', 'shadow-sm');
+            tabSignup.classList.add('text-[#444746]');
+        } else {
+            tabSignup.classList.add('bg-white', 'shadow-sm');
+            tabSignup.classList.remove('text-[#444746]');
+            tabLogin.classList.remove('bg-white', 'shadow-sm');
+            tabLogin.classList.add('text-[#444746]');
+        }
+    }
 }
 
 async function handleUpdateProfile() {

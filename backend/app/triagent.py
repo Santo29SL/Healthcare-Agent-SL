@@ -27,7 +27,7 @@ def check_risk(user_query: str) -> dict:
             for i in range(len(words) - len(symptom_words) + 1):
                 if words[i:i+len(symptom_words)] == symptom_words:
                     
-                    window = words[max(0, i-2):i] ## check previous 2 words for negation
+                    window = words[max(0, i-3):i] ## check previous 3 words for negation
                     if any(neg in window for neg in NEGATIONS):
                         continue
 
@@ -35,7 +35,7 @@ def check_risk(user_query: str) -> dict:
                         words[max(0, i-3):i] +
                         words[i+len(symptom_words): i+len(symptom_words)+3]
                     )
-                    if any(emergency in window for emergency in intensity_window):
+                    if any(emergency in emergency_symptoms for emergency in intensity_window):
                         return {
                         "risk_level": "moderate - high",
                         "advice": "Seek immediate medical attention or call emergency services."

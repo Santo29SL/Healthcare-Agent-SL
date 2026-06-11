@@ -24,7 +24,7 @@ def init_db():
         cursor = conn.cursor()
         print("Connected to MySQL server.")
 
-        # Create 'user' database
+        # 1. Create 'user' database
         print("Creating 'user' database...")
         cursor.execute("CREATE DATABASE IF NOT EXISTS user")
         cursor.execute("USE user")
@@ -40,7 +40,7 @@ def init_db():
             )
         """)
         
-        # Create 'medical_profiles' database
+        # 2. Create 'medical_profiles' database
         print("Creating 'medical_profiles' database...")
         cursor.execute("CREATE DATABASE IF NOT EXISTS medical_profiles")
         cursor.execute("USE medical_profiles")
@@ -56,6 +56,60 @@ def init_db():
                 FOREIGN KEY (user_id) REFERENCES user.users(id)
             )
         """)
+
+        # 3. Create 'conversation' database
+        print("Creating 'conversation' database...")
+        cursor.execute("CREATE DATABASE IF NOT EXISTS conversation")
+        cursor.execute("USE conversation")
+
+        # Create 'conversations' table
+        print("Creating 'conversations' table...")
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS conversations (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                role VARCHAR(20) NOT NULL,
+                message TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # 4. Create 'DoctorDB' database
+        print("Creating 'DoctorDB' database...")
+        cursor.execute("CREATE DATABASE IF NOT EXISTS DoctorDB")
+        cursor.execute("USE DoctorDB")
+
+        # Create 'doctors' table
+        print("Creating 'doctors' table...")
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS doctors (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                specialty VARCHAR(255) NOT NULL,
+                phone_number VARCHAR(50) NOT NULL,
+                latitude DOUBLE NOT NULL,
+                longitude DOUBLE NOT NULL
+            )
+        """)
+
+        # Insert sample doctors/clinics
+        print("Checking sample doctors data...")
+        cursor.execute("SELECT COUNT(*) FROM doctors")
+        count = cursor.fetchone()[0]
+        if count == 0:
+            print("Seeding sample doctors...")
+            sample_doctors = [
+                ("Rahul Sharma", "Cardiologist", "9876543210", 12.9716, 77.5946),
+                ("Anita Verma", "Dermatologist", "9123456780", 12.9721, 77.5933),
+                ("Vikram Rao", "General Physician", "9988776655", 12.9750, 77.5900),
+                ("Sneha Reddy", "Pediatrician", "9880123456", 12.9300, 77.6200),
+                ("Rohan Das", "Orthopedician", "9770987654", 12.9500, 77.6000),
+                ("Priya Patel", "Gynecologist", "9660112233", 13.0000, 77.5800)
+            ]
+            cursor.executemany("""
+                INSERT INTO doctors (name, specialty, phone_number, latitude, longitude)
+                VALUES (%s, %s, %s, %s, %s)
+            """, sample_doctors)
         
         conn.commit()
         cursor.close()

@@ -25,7 +25,7 @@ if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY not found in .env file")
 
 model = ChatGroq(
-    model_name="moonshotai/kimi-k2-instruct-0905",
+    model_name="llama-3.3-70b-versatile",
     groq_api_key=GROQ_API_KEY
 )
 
@@ -122,3 +122,6 @@ if __name__ == "__main__":
             break
         
         print("Agent:", get_response(user_input))
+
+
+        print("GROQ KEY =", GROQ_API_KEY[:15] if GROQ_API_KEY else "NOT FOUND")

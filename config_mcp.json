@@ -1,9 +1,9 @@
 {
   "mcpServers": {
     "pubmed": {
-      "command": "python",
+      "command": "/Users/santhoshsl/Desktop/Devpost/Healthcare-Agent1/venv/bin/python",
       "args": [
-        "PubMed-MCP-Server/pubmed_server.py"
+        "/Users/santhoshsl/Desktop/Devpost/Healthcare-Agent1/PubMed-MCP-Server/pubmed_server.py"
       ],
       "env": {},
       "disabled": false,

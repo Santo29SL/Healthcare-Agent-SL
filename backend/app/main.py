@@ -62,12 +62,17 @@ def get_history(user_id: int):
     try:
         # Targeting the 'conversation' database as per your store_conversation.py
         conn = get_connection("conversation")
-        cursor = conn.cursor()
-        query = "SELECT message, created_at FROM conversations WHERE user_id = %s AND role = 'user' ORDER BY created_at DESC LIMIT 10"
-        cursor.execute(query, (user_id,))
-        rows = cursor.fetchall()
-        cursor.close(); conn.close()
-        return [{"query": r[0], "time": r[1].strftime("%Y-%m-%d %H:%M")} for r in rows]
+        try:
+            cursor = conn.cursor()
+            try:
+                query = "SELECT message, created_at FROM conversations WHERE user_id = %s AND role = 'user' ORDER BY created_at DESC LIMIT 10"
+                cursor.execute(query, (user_id,))
+                rows = cursor.fetchall()
+                return [{"query": r[0], "time": r[1].strftime("%Y-%m-%d %H:%M")} for r in rows]
+            finally:
+                cursor.close()
+        finally:
+            conn.close()
     except: return []
 
 @app.post("/triage")

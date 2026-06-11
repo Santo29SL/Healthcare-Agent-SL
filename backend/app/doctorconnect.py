@@ -27,25 +27,28 @@ def haversine(lat1, lon1, lat2, lon2):
 
 def find_nearest_doctors(user_lat, user_lon, specialty=None):
     conn = get_connection("DoctorDB")
-    cursor = conn.cursor()
+    try:
+        cursor = conn.cursor()
+        try:
+            if specialty:
+                query = """
+                    SELECT name, specialty, latitude, longitude, phone_number
+                    FROM doctors
+                    WHERE specialty = %s
+                """
+                cursor.execute(query, (specialty,))
+            else:
+                query = """
+                    SELECT name, specialty, latitude, longitude, phone_number
+                    FROM doctors
+                """
+                cursor.execute(query)
 
-    if specialty:
-        query = """
-            SELECT name, specialty, latitude, longitude, phone_number
-            FROM doctors
-            WHERE specialty = %s
-        """
-        cursor.execute(query, (specialty,))
-    else:
-        query = """
-            SELECT name, specialty, latitude, longitude, phone_number
-            FROM doctors
-        """
-        cursor.execute(query)
-
-    doctors = cursor.fetchall()
-    cursor.close()
-    conn.close()
+            doctors = cursor.fetchall()
+        finally:
+            cursor.close()
+    finally:
+        conn.close()
 
     nearest_doctors = []
 

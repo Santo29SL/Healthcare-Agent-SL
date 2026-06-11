@@ -8,7 +8,7 @@ mysql-connector-python
 geocoder
 python-dotenv
 mcp-use
-bcyrpt
+bcrypt
 
 fastapi
 uvicorn
